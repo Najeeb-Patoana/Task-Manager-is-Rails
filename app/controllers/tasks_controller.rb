@@ -1,58 +1,57 @@
 
 class TasksController < ApplicationController
-  # READ: Show all tasks
+  before_action :set_task, only: %i[show update destroy]
+
+  # GET /tasks
   def index
-    @tasks = Task.order(created_at: :desc)
+    render json: Task.order(created_at: :desc),
+           status: :ok
   end
 
-  # READ: Show one task
+  # GET /tasks/:id
   def show
-    @task = Task.find(params[:id])
+    render json: @task, status: :ok
   end
 
-  # Display the empty form
-  def new
-    @task = Task.new
-  end
-
-  # CREATE: Receive form data and save a task
+  # POST /tasks
   def create
-    @task = Task.new(task_params)
+    task = Task.new(task_params)
 
-    if @task.save
-      redirect_to @task, notice: "Task created successfully."
+    if task.save
+      render json: task, status: :created
     else
-      render :new, status: :unprocessable_entity
+      render json: { errors: task.errors.full_messages },
+             status: :unprocessable_entity
     end
   end
 
-  # Display the form for editing
-  def edit
-    @task = Task.find(params[:id])
-  end
-
-  # UPDATE: Save changes to an existing task
+  # PATCH /tasks/:id or PUT /tasks/:id
   def update
-    @task = Task.find(params[:id])
-
     if @task.update(task_params)
-      redirect_to @task, notice: "Task updated successfully."
+      render json: @task, status: :ok
     else
-      render :edit, status: :unprocessable_entity
+      render json: { errors: @task.errors.full_messages },
+             status: :unprocessable_entity
     end
   end
 
-  # DELETE: Remove a task
+  # DELETE /tasks/:id
   def destroy
-    @task = Task.find(params[:id])
-    @task.destroy
-
-    redirect_to tasks_path, notice: "Task deleted successfully."
+    @task.destroy!
+    head :no_content
   end
 
   private
 
-  # Permit only the fields that users may submit
+  def set_task
+    @task = Task.find_by(id: params[:id])
+
+    unless @task
+      render json: { error: "Task not found" },
+             status: :not_found
+    end
+  end
+
   def task_params
     params.require(:task).permit(
       :title,
