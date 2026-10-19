@@ -1,6 +1,4 @@
 
 Rails.application.routes.draw do
-  root "tasks#index"
-
-  resources :tasks
+  resources :tasks, only: %i[index show create update destroy]
 end
