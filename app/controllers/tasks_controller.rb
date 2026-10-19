@@ -43,15 +43,17 @@ class TasksController < ApplicationController
 
   private
 
+  # Find task before show, update, or destroy
   def set_task
     @task = Task.find_by(id: params[:id])
 
-    unless @task
-      render json: { error: "Task not found" },
-             status: :not_found
-    end
+    return if @task
+
+    render json: { error: "Task not found" },
+           status: :not_found
   end
 
+  # Allow only permitted fields from the request body
   def task_params
     params.require(:task).permit(
       :title,
