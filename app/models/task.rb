@@ -1,12 +1,12 @@
 
 class Task < ApplicationRecord
-  # Callback 1: Runs before validations on create and update.
+  # Callback: runs before model validations
   before_validation :normalize_title
 
-  # Callback 2: Runs after a successful database insert.
+  # Callback: runs after a successful create operation
   after_create :log_task_creation
 
-  # Callback 3: Runs before an existing record is updated.
+  # Callback: runs before updating an existing record
   before_update :log_task_update
 
   # Validations
@@ -33,7 +33,7 @@ class Task < ApplicationRecord
   end
 
   def log_task_update
-    Rails.logger.info("Task being updated: #{id}")
+    Rails.logger.info("Updating task: #{id}")
   end
 
   def due_date_cannot_be_in_the_past
