@@ -1,5 +1,6 @@
 
 class TasksController < ApplicationController
+    skip_forgery_protection
   before_action :set_task, only: %i[show update destroy]
 
   # GET /tasks
