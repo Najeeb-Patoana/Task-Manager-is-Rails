@@ -1,0 +1,51 @@
+
+<% if notice.present? %>
+  <p><%= notice %></p>
+<% end %>
+
+<h1>Task Details</h1>
+
+<p>
+  <strong>Title:</strong>
+  <%= @task.title %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @task.description.presence || "No description provided" %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @task.status %>
+</p>
+
+<p>
+  <strong>Due Date:</strong>
+  <%= @task.due_date || "Not set" %>
+</p>
+
+<p>
+  <strong>Created At:</strong>
+  <%= @task.created_at %>
+</p>
+
+<p>
+  <strong>Updated At:</strong>
+  <%= @task.updated_at %>
+</p>
+
+<hr>
+
+<%= link_to "Back to Tasks", tasks_path %>
+|
+<%= link_to "Edit Task", edit_task_path(@task) %>
+|
+<%= button_to "Delete Task",
+              task_path(@task),
+              method: :delete,
+              form: {
+                data: {
+                  turbo_confirm: "Are you sure?"
+                }
+              } %>

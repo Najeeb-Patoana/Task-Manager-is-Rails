@@ -1,0 +1,53 @@
+
+<h1>Task Manager</h1>
+
+<% if notice.present? %>
+  <p><%= notice %></p>
+<% end %>
+
+<% if alert.present? %>
+  <p><%= alert %></p>
+<% end %>
+
+<p>
+  <%= link_to "Create New Task", new_task_path %>
+</p>
+
+<% if @tasks.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Status</th>
+        <th>Due Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @tasks.each do |task| %>
+        <tr>
+          <td><%= task.title %></td>
+          <td><%= task.status %></td>
+          <td><%= task.due_date || "Not set" %></td>
+          <td>
+            <%= link_to "View", task_path(task) %>
+            |
+            <%= link_to "Edit", edit_task_path(task) %>
+            |
+            <%= button_to "Delete",
+                          task_path(task),
+                          method: :delete,
+                          form: {
+                            data: {
+                              turbo_confirm: "Are you sure?"
+                            }
+                          } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No tasks found. Create your first task!</p>
+<% end %>
